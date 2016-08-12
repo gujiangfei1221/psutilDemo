@@ -35,8 +35,8 @@ def get_network():
         m_network = psutil.net_io_counters(pernic=False)
         sentnum = sentnum + m_network.bytes_sent
         recvnum = recvnum + m_network.bytes_recv
-        sentnum = sentnum/times
-        recvnum = recvnum/times
+    sentnum = sentnum/times
+    recvnum = recvnum/times
     return sentnum,recvnum
 
 def get_diskuseage():
@@ -51,16 +51,24 @@ def get_diskuseage():
     return m_list
 
 def get_diskio():
-    pass
+    times = 5
+    read = 0
+    write = 0
+    m_diskio = psutil.disk_io_counters(perdisk=False)
+    for i in range(0,times):
+        read = read + m_diskio.read_bytes
+        write = write + m_diskio.write_bytes
+    read = read/times
+    write = write/times
+    return read,write
+
 
 if __name__ == "__main__":
-    print('disk_io_counters:', psutil.disk_io_counters(perdisk=True))
-
-# print('disk_partitions:', psutil.disk_partitions(all=False))
-#
-# print('disk_useage:', psutil.disk_usage('D:/'))
-#
-# print('disk_io_counters:', psutil.disk_io_counters(perdisk=True))
+    print(get_cpuinfo())
+    print(get_memory())
+    print(get_network())
+    print(get_diskuseage())
+    print(get_diskio())
 
 
 
