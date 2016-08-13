@@ -40,15 +40,21 @@ def get_network():
     return sentnum,recvnum
 
 def get_diskuseage():
-    m_list = []
-    m_disk = psutil.disk_partitions(all=False)
+    # m_list = []
+    m_disk = psutil.disk_partitions(all=True)
+    total = 0
+    used = 0
+    free = 0
     for i in m_disk:
         path = i.device
         fstype = i.fstype
         if(path != None and fstype != ''):
             path = path.replace('\\','/')
-            m_list.append(psutil.disk_usage(path))
-    return m_list
+            m_useage = psutil.disk_usage(path)
+            total = total + m_useage.total
+            used = used + m_useage.used
+            free = free + m_useage.free
+    return total,used,free
 
 def get_diskio():
     times = 5
