@@ -62,6 +62,20 @@ def get_diskio():
     write = write/times
     return read,write
 
+def handle():
+
+    try:
+        # 获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
+        conn = pymysql.connect(host='localhost', user='root', passwd='root', db='codeigniter', port=8889,charset='utf8')
+        cur = conn.cursor()  # 获取一个游标
+        cur.execute('')
+        conn.commit();
+        cur.close()  # 关闭游标
+        conn.close()  # 释放数据库资源
+
+    except  Exception as e:
+        print(e.args)
+
 
 if __name__ == "__main__":
     print(get_cpuinfo())
@@ -72,17 +86,4 @@ if __name__ == "__main__":
 
 
 
-# try:
-#     # 获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
-#     conn = pymysql.connect(host='localhost', user='root', passwd='ede1954b', db='codeigniter', port=3306,
-#                            charset='utf8')
-#     cur = conn.cursor()  # 获取一个游标
-#     cur.execute(
-#         'update gupiaoinfo set yichang = \'yichang\',yichangdate = \'' + timelist[i + 1] + '\' where gupiaoname =\'' +
-#         namelist[0] + '\'')
-#     # cur.execute('insert into gupiaoinfo(gupiaoname,gupiaono,latestlowprice,latesthighprice,longlowprice,price,jiazhipaixu,fengxianpaixu) values(\''+list[0]+'\',\''+list[1]+'\',\''+list[3]+'\',\''+list[2]+'\',\''+list[5]+'\',\''+list[4]+'\',\''+str(jiazhipaixu1)+'\',\''+str(fengxianpaixu1)+'\')')
-#     conn.commit();
-#     cur.close()  # 关闭游标
-#     conn.close()  # 释放数据库资源
-# except  Exception as e:
-#     print(e.args)
+
