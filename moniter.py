@@ -74,20 +74,20 @@ def get_nameandip():
     return myname,myaddr
 
 def handle():
-    cpu_percent = get_cpuinfo()
-    memory_total = get_memory()[0]/1024/1024
-    memory_available = get_memory()[1]/1024/1024
-    memory_usepercent = get_memory()[2]
-    memory_used = get_memory()[3]/1024/1024
-    network_sent = get_network()[0]/1024/1024
-    network_recv = get_network()[1]/1024/1024
-    diskio_read = get_diskio()[0]
-    diskio_write = get_diskio()[1]
-    disk_total = get_diskuseage()[0]
-    disk_used = get_diskuseage()[1]
-    disk_free = get_diskuseage()[2]
-    name = get_nameandip()[0]
-    ip = get_nameandip()[1]
+    cpu_percent = str(get_cpuinfo())
+    memory_total = str(get_memory()[0]/1024/1024)
+    memory_available = str(get_memory()[1]/1024/1024)
+    memory_usepercent = str(get_memory()[2])
+    memory_used = str(get_memory()[3]/1024/1024)
+    network_sent = str(get_network()[0]/1024/1024)
+    network_recv = str(get_network()[1]/1024/1024)
+    diskio_read = str(get_diskio()[0])
+    diskio_write = str(get_diskio()[1])
+    disk_total = str(get_diskuseage()[0])
+    disk_used = str(get_diskuseage()[1])
+    disk_free = str(get_diskuseage()[2])
+    name = str(get_nameandip()[0])
+    ip = str(get_nameandip()[1])
 
     try:
         # 获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
