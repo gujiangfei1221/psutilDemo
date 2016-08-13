@@ -1,5 +1,5 @@
 # -*- coding = utf-8 -*-
-import psutil,pymysql
+import psutil,pymysql,socket
 
 def get_cpuinfo():
     num = 0
@@ -68,6 +68,9 @@ def get_diskio():
     write = write/times
     return read,write
 
+def get_ip():
+    pass
+
 def handle():
     cpu_percent = get_cpuinfo()
     memory_total = get_memory()[0]/1024/1024
@@ -78,27 +81,33 @@ def handle():
     network_recv = get_network()[1]/1024/1024
     diskio_read = get_diskio()[0]
     diskio_write = get_diskio()[1]
+    disk_total = get_diskuseage()[0]
+    disk_used = get_diskuseage()[1]
+    disk_free = get_diskuseage()[2]
 
-    # try:
-    #     # 获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
-    #     conn = pymysql.connect(host='localhost', user='root', passwd='root', db='codeigniter', port=8889,charset='utf8')
-    #     cur = conn.cursor()  # 获取一个游标
-    #     cur.execute('')
-    #     conn.commit();
-    #     cur.close()  # 关闭游标
-    #     conn.close()  # 释放数据库资源
-    #
-    # except  Exception as e:
-    #     print(e.args)
+    try:
+        # 获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
+        conn = pymysql.connect(host='localhost', user='root', passwd='root', db='knowledgelibrary', port=8889,charset='utf8')
+        cur = conn.cursor()  # 获取一个游标
+        cur.execute('insert into fuwuqi() values()')
+        conn.commit();
+        cur.close()  # 关闭游标
+        conn.close()  # 释放数据库资源
+
+    except  Exception as e:
+        print(e.args)
 
 
 if __name__ == "__main__":
     # print(get_cpuinfo())
     # print(get_memory())
     # print(get_network())
-    print(get_diskuseage())
+    # print(get_diskuseage())
     # print(get_diskio())
     # handle()
+    myname = socket.getfqdn(socket.gethostname())
+    myaddr = socket.gethostbyname(myname)
+    print(myname,myaddr)
 
 
 
