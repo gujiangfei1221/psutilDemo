@@ -68,8 +68,9 @@ def get_diskio():
     write = write/times
     return read,write
 
-def get_ip():
-    pass
+def get_nameandip():
+    myname = socket.getfqdn(socket.gethostname())
+    myaddr = socket.gethostbyname(myname)
 
 def handle():
     cpu_percent = get_cpuinfo()
@@ -84,12 +85,14 @@ def handle():
     disk_total = get_diskuseage()[0]
     disk_used = get_diskuseage()[1]
     disk_free = get_diskuseage()[2]
+    name = get_nameandip()[0]
+    ip = get_nameandip()[1]
 
     try:
         # 获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
         conn = pymysql.connect(host='localhost', user='root', passwd='root', db='knowledgelibrary', port=8889,charset='utf8')
         cur = conn.cursor()  # 获取一个游标
-        cur.execute('insert into fuwuqi() values()')
+        cur.execute('insert into fuwuqi(name,ip,cpu_percent,memory_total,memory_available,memory_percent,memory_used,network_sent,network_recv,disk_read,disk_write,disk_total,disk_used,disk_free) values(\''+name+'\',\''+ip+'\',\''+cpu_percent+'\',\''+memory_total+'\',\''+memory_available+'\',\''+memory_usepercent+'\',\''+memory_used+'\',\''+network_sent+'\',\''+network_recv+'\',\''+diskio_read+'\',\''+diskio_write+'\',\''+disk_total+'\',\''+disk_used+'\',\''+disk_free+'\')')
         conn.commit();
         cur.close()  # 关闭游标
         conn.close()  # 释放数据库资源
@@ -104,10 +107,7 @@ if __name__ == "__main__":
     # print(get_network())
     # print(get_diskuseage())
     # print(get_diskio())
-    # handle()
-    myname = socket.getfqdn(socket.gethostname())
-    myaddr = socket.gethostbyname(myname)
-    print(myname,myaddr)
+    handle()
 
 
 
