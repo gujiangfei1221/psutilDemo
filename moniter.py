@@ -108,7 +108,8 @@ if __name__ == "__main__":
     # print(get_network())
     # print(get_diskuseage())
     # print(get_diskio())
-    handle()
+    for i in range(1,20):
+        handle()
     # get_nameandip()
 
 
