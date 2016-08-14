@@ -1,5 +1,5 @@
 # -*- coding = utf-8 -*-
-import psutil,pymysql,socket
+import psutil,pymysql,socket,time
 
 def get_cpuinfo():
     num = 0
@@ -33,8 +33,10 @@ def get_network():
     recvnum = 0
     for i in range(0,times):
         m_network = psutil.net_io_counters(pernic=False)
-        sentnum = sentnum + m_network.bytes_sent
-        recvnum = recvnum + m_network.bytes_recv
+        time.sleep(1)
+        m_network2 = psutil.net_io_counters(pernic=False)
+        sentnum = sentnum + (m_network2.bytes_sent - m_network.bytes_sent)
+        recvnum = recvnum + (m_network2.bytes_recv - m_network.bytes_recv)
     sentnum = sentnum/times
     recvnum = recvnum/times
     return sentnum,recvnum
@@ -60,10 +62,12 @@ def get_diskio():
     times = 5
     read = 0
     write = 0
-    m_diskio = psutil.disk_io_counters(perdisk=False)
     for i in range(0,times):
-        read = read + m_diskio.read_bytes
-        write = write + m_diskio.write_bytes
+        m_diskio = psutil.disk_io_counters(perdisk=False)
+        time.sleep(1)
+        m_diskio2 = psutil.disk_io_counters(perdisk=False)
+        read = read + (m_diskio2.read_bytes - m_diskio.read_bytes)
+        write = write + (m_diskio2.write_bytes - m_diskio.write_bytes)
     read = read/times
     write = write/times
     return read,write
@@ -88,12 +92,13 @@ def handle():
     disk_free = str(get_diskuseage()[2])
     name = str(get_nameandip()[0])
     ip = str(get_nameandip()[1])
+    m_time = str(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
 
     try:
         # 获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
         conn = pymysql.connect(host='localhost', user='root', passwd='root', db='knowledgelibrary', port=3306,charset='utf8')
         cur = conn.cursor()  # 获取一个游标
-        cur.execute('insert into fuwuqi(name,ip,cpu_percent,memory_total,memory_available,memory_percent,memory_used,network_sent,network_recv,disk_read,disk_write,disk_total,disk_used,disk_free) values(\''+name+'\',\''+ip+'\',\''+cpu_percent+'\',\''+memory_total+'\',\''+memory_available+'\',\''+memory_usepercent+'\',\''+memory_used+'\',\''+network_sent+'\',\''+network_recv+'\',\''+diskio_read+'\',\''+diskio_write+'\',\''+disk_total+'\',\''+disk_used+'\',\''+disk_free+'\')')
+        cur.execute('insert into fuwuqi(name,ip,cpu_percent,memory_total,memory_available,memory_percent,memory_used,network_sent,network_recv,disk_read,disk_write,disk_total,disk_used,disk_free,time) values(\''+name+'\',\''+ip+'\',\''+cpu_percent+'\',\''+memory_total+'\',\''+memory_available+'\',\''+memory_usepercent+'\',\''+memory_used+'\',\''+network_sent+'\',\''+network_recv+'\',\''+diskio_read+'\',\''+diskio_write+'\',\''+disk_total+'\',\''+disk_used+'\',\''+disk_free+'\',\''+m_time+'\')')
         conn.commit();
         cur.close()  # 关闭游标
         conn.close()  # 释放数据库资源
@@ -111,6 +116,12 @@ if __name__ == "__main__":
     for i in range(1,20):
         handle()
     # get_nameandip()
+    # for i in range(1,100):
+    #     m = psutil.disk_io_counters(perdisk=False)
+    #     time.sleep(1)
+    #     m2 = psutil.disk_io_counters(perdisk=False)
+    #     print(m2.read_bytes-m.read_bytes,m2.write_bytes-m.write_bytes)
+    # print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
 
 
 
